@@ -24,10 +24,10 @@ namespace HotelBookingWeb.Services
                 query = query.Where(r => r.HotelId == hotelId);
 
             if (minPrice.HasValue)
-                query = query.Where(r => r.Price >= minPrice);
+                query = query.Where(r => r.PricePerNight >= minPrice);
 
             if (maxPrice.HasValue)
-                query = query.Where(r => r.Price <= maxPrice);
+                query = query.Where(r => r.PricePerNight <= maxPrice);
 
             return await query.Include(r => r.Hotel).ToListAsync();
         }
@@ -44,7 +44,7 @@ namespace HotelBookingWeb.Services
             var room = new Room
             {
                 RoomNumber = dto.RoomNumber,
-                Price = dto.Price,
+                PricePerNight = dto.Price,
                 Capacity = dto.Capacity,
                 HotelId = dto.HotelId
             };
@@ -61,7 +61,7 @@ namespace HotelBookingWeb.Services
             if (room == null) return null;
 
             room.RoomNumber = dto.RoomNumber;
-            room.Price = dto.Price;
+            room.PricePerNight = dto.Price;
             room.Capacity = dto.Capacity;
 
             await _context.SaveChangesAsync();

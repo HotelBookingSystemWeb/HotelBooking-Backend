@@ -1,4 +1,4 @@
-using HotelBookingAPI.Data;
+using HotelBookingWeb.Data;
 using HotelBookingWeb.DTOs;
 using HotelBookingWeb.Interfaces;
 using HotelBookingWeb.Models;
@@ -72,7 +72,7 @@ namespace HotelBookingWeb.Services
                     return false;
                 }
 
-                existingUser.FullName = updatedUser.FullName;
+                existingUser.Name = updatedUser.Name;
                 existingUser.PhoneNumber = updatedUser.PhoneNumber;
                 existingUser.IsActive = updatedUser.IsActive;
 

@@ -5,7 +5,7 @@ namespace HotelBookingWeb.Models
         public int Id { get; set; }
 
         public string RoomNumber { get; set; }
-        public decimal Price { get; set; }
+        public decimal PricePerNight { get; set; }
         public int Capacity { get; set; }
 
         public bool IsAvailable { get; set; } = true;

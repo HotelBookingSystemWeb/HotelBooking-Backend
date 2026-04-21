@@ -1,4 +1,4 @@
-namespace HotelBookingAPI.DTOs
+namespace HotelBookingWeb.DTOs
 {
     public class AuthResponseDto
     {
