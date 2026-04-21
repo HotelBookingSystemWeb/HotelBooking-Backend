@@ -1,4 +1,4 @@
-using HotelBookingAPI.Data;
+using HotelBookingWeb.Data;
 using HotelBookingWeb.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
