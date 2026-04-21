@@ -1,0 +1,8 @@
+namespace HotelBookingWeb.Interfaces
+{
+    public interface IEmailService
+    {
+        Task<bool> SendEmailAsync(string toEmail, string subject, string body);
+        Task<bool> SendPromotionEmailToAllUsersAsync(string subject, string body);
+    }
+}
