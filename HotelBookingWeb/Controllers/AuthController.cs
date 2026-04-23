@@ -24,6 +24,10 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login(LoginDto dto)
     {
         var result = await _service.Login(dto);
+
+        if (result == null)
+            return BadRequest("Invalid credentials");
+
         return Ok(result);
     }
 }

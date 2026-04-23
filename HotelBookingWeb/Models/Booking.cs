@@ -1,4 +1,5 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HotelBookingWeb.Models
 {
@@ -9,11 +10,9 @@ namespace HotelBookingWeb.Models
         public string BookingNumber { get; set; }
 
         public int UserId { get; set; }
-
         public int RoomId { get; set; }
 
         public DateTime CheckInDate { get; set; }
-
         public DateTime CheckOutDate { get; set; }
 
         public decimal TotalAmount { get; set; }
