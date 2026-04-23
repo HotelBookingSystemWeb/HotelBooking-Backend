@@ -150,26 +150,20 @@ namespace HotelBookingWeb.Services
             {
                 Console.WriteLine("[UserService] Fetching dashboard summary...");
 
-                var totalUsers = await _context.Users.CountAsync();
-                var activeUsers = await _context.Users.CountAsync(u => u.IsActive);
-                var totalHotels = await _context.Hotels.CountAsync();
-                var totalRooms = await _context.Rooms.CountAsync();
-                var totalBookings = await _context.Bookings.CountAsync();
-                var activePromotions = await _context.Promotions.CountAsync(p => p.IsActive);
+                var users = await _context.Users.CountAsync();
+                var hotels = await _context.Hotels.CountAsync();
+                var bookings = await _context.Bookings.CountAsync();
 
-                var today = DateTime.UtcNow.Date;
-                var todayBookings = await _context.Bookings
-                    .CountAsync(b => b.CreatedAt.Date == today);
+                var revenue = await _context.Bookings
+                    .Where(b => b.Status != "Cancelled")
+                    .SumAsync(b => (decimal?)b.TotalAmount) ?? 0;
 
                 var result = new
                 {
-                    TotalUsers = totalUsers,
-                    ActiveUsers = activeUsers,
-                    TotalHotels = totalHotels,
-                    TotalRooms = totalRooms,
-                    TotalBookings = totalBookings,
-                    TodayBookings = todayBookings,
-                    ActivePromotions = activePromotions
+                    users,
+                    bookings,
+                    hotels,
+                    revenue
                 };
 
                 Console.WriteLine("[UserService] Dashboard summary fetched successfully.");
@@ -329,6 +323,20 @@ namespace HotelBookingWeb.Services
                 Console.WriteLine($"[UserService] Error while fetching active promotions: {ex.Message}");
                 throw;
             }
+        }
+
+        public async Task<object> GetRecentBookingsAsync()
+        {
+            return await _context.Bookings
+                .OrderByDescending(b => b.Id)
+                .Take(5)
+                .Select(b => new
+                {
+                    b.BookingNumber,
+                    b.Status,
+                    b.TotalAmount
+                })
+                .ToListAsync();
         }
     }
 }

@@ -1,4 +1,4 @@
-using HotelBookingWeb.DTOs;
+﻿using HotelBookingWeb.DTOs;
 using HotelBookingWeb.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +19,7 @@ namespace HotelBookingWeb.Controllers
             _emailService = emailService;
         }
 
+        // 🔥 DASHBOARD
         [HttpGet("dashboard")]
         public async Task<IActionResult> GetDashboardSummary()
         {
@@ -32,6 +33,23 @@ namespace HotelBookingWeb.Controllers
             {
                 Console.WriteLine($"[AdminController] Error in GetDashboardSummary: {ex.Message}");
                 return StatusCode(500, new { message = "An error occurred while fetching dashboard summary." });
+            }
+        }
+
+        // 🔥 NEW API (RECENT BOOKINGS) ✅ ONLY ADDITION
+        [HttpGet("recent-bookings")]
+        public async Task<IActionResult> GetRecentBookings()
+        {
+            try
+            {
+                Console.WriteLine("[AdminController] GetRecentBookings called.");
+                var data = await _userService.GetRecentBookingsAsync();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[AdminController] Error in GetRecentBookings: {ex.Message}");
+                return StatusCode(500, new { message = "Error fetching recent bookings" });
             }
         }
 

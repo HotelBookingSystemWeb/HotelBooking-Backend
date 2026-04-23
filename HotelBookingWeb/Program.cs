@@ -26,6 +26,15 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<PasswordHasher>();
+// 🔥 CORS (Allow Angular)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy => policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
 
 // 🔥 JWT AUTHENTICATION
 var key = builder.Configuration["Jwt:Key"];
@@ -52,7 +61,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 // 🔥 CONTROLLERS
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 
 // 🔥 SWAGGER WITH AUTHORIZE BUTTON
 builder.Services.AddEndpointsApiExplorer();
@@ -86,13 +100,19 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// 🔥 MIDDLEWARE
+// 🔥 MIDDLEWARE PIPELINE
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+
+// 🔥 CORS MUST COME BEFORE AUTH
+app.UseCors("AllowAngular");
+
 app.UseMiddleware<ExceptionMiddleware>();
-app.UseAuthentication(); // ⚠️ MUST COME BEFORE AUTHORIZATION
+
+app.UseAuthentication(); // ⚠️ BEFORE AUTHORIZATION
 app.UseAuthorization();
 
 app.MapControllers();

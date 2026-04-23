@@ -30,9 +30,9 @@ namespace HotelBookingWeb.Middleware
                 var statusCode = HttpStatusCode.InternalServerError;
 
                 // 🔥 Custom error mapping
-                if (ex.Message.Contains("not found"))
+                if (ex.Message.Contains("Room not found"))
                     statusCode = HttpStatusCode.NotFound;
-                else if (ex.Message.Contains("Invalid"))
+                else if (ex.Message.Contains("Invalid Dates"))
                     statusCode = HttpStatusCode.BadRequest;
                 else if (ex.Message.Contains("Unauthorized"))
                     statusCode = HttpStatusCode.Unauthorized;

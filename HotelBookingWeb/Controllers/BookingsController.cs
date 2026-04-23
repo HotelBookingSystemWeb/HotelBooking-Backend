@@ -8,7 +8,7 @@ namespace HotelBookingWeb.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize] // 🔐 ALL APIs REQUIRE LOGIN
+    [Authorize]
     public class BookingsController : ControllerBase
     {
         private readonly IBookingService _service;
@@ -23,11 +23,15 @@ namespace HotelBookingWeb.Controllers
             return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         }
 
-        [HttpPost]
+        [HttpPost] // ✅ fixed duplicate
         public async Task<IActionResult> Create(BookingDto dto)
         {
             var userId = GetUserId();
             var result = await _service.CreateBooking(userId, dto);
+
+            if (result == null)
+                return BadRequest("Booking failed (room unavailable or invalid dates)");
+
             return Ok(result);
         }
 
@@ -44,15 +48,27 @@ namespace HotelBookingWeb.Controllers
         {
             var userId = GetUserId();
             var result = await _service.CancelBooking(id, userId);
-            return result ? Ok("Cancelled") : Unauthorized();
+
+            if (!result)
+                return BadRequest(new { message = "Cancel failed" }); // ✅ FIX
+
+            return Ok(new { message = "Cancelled" }); // ✅ FIX
         }
 
         [HttpPut("{id}/status")]
-        [Authorize(Roles = "Admin")] // 🔥 ONLY ADMIN
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateStatus(int id, BookingStatusDto dto)
         {
             var result = await _service.UpdateStatus(id, dto.Status);
             return result != null ? Ok(result) : NotFound();
+        }
+
+        [HttpGet("all")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllBookings()
+        {
+            var result = await _service.GetAllBookingsAsync();
+            return Ok(result);
         }
     }
 }

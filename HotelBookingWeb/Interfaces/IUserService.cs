@@ -12,7 +12,7 @@ namespace HotelBookingWeb.Interfaces
         Task<bool> DeleteUserAsync(int id);
         Task<bool> ToggleUserStatusAsync(int id);
         Task<object> GetDashboardSummaryAsync();
-
+        Task<object> GetRecentBookingsAsync();
         Task<IEnumerable<Promotion>> GetAllPromotionsAsync();
         Task<Promotion?> GetPromotionByIdAsync(int id);
         Task<Promotion> CreatePromotionAsync(PromotionDto dto);

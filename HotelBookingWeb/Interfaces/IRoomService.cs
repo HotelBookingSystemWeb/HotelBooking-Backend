@@ -5,6 +5,7 @@ namespace HotelBookingWeb.Interfaces
 {
     public interface IRoomService
     {
+        Task<IEnumerable<Room>> GetAvailableRoomsAsync(int hotelId, DateTime checkIn, DateTime checkOut);
         Task<IEnumerable<Room>> GetRoomsAsync(int? hotelId, decimal? minPrice, decimal? maxPrice);
         Task<Room?> GetByIdAsync(int id);
         Task<Room> CreateAsync(RoomDto dto);

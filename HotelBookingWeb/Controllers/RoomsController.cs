@@ -61,5 +61,15 @@ namespace HotelBookingWeb.Controllers
             if (!result) return NotFound();
             return Ok("Deleted Successfully");
         }
+
+        [HttpGet("available")]
+        public async Task<IActionResult> GetAvailableRooms(
+    [FromQuery] int hotelId,
+    [FromQuery] DateTime checkIn,
+    [FromQuery] DateTime checkOut)
+        {
+            var rooms = await _service.GetAvailableRoomsAsync(hotelId, checkIn, checkOut);
+            return Ok(rooms);
+        }
     }
 }

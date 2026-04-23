@@ -78,5 +78,17 @@ namespace HotelBookingWeb.Services
 
             return true;
         }
+        public async Task<IEnumerable<Room>> GetAvailableRoomsAsync(int hotelId, DateTime checkIn, DateTime checkOut)
+        {
+            return await _context.Rooms
+                .Where(r => r.HotelId == hotelId)
+                .Where(r => !_context.Bookings.Any(b =>
+                    b.RoomId == r.Id &&
+                    b.Status != "Cancelled" &&
+                    checkIn < b.CheckOutDate &&
+                    checkOut > b.CheckInDate
+                ))
+                .ToListAsync();
+        }
     }
 }
